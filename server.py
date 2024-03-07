@@ -134,3 +134,9 @@ def delete_by_uuid(id):
                 except NameError:
                         return {"message":"data not defined"}, 500
                 return {"message": f"{new_person['id']}"},200
+
+#Create a method called api_not_found with the @app.errorhandler decorator. 
+#This method will return a message of API not found with an HTTP status code of 404 whenever the client requests a URL that does not lead to any endpoints defined by the server.
+@app.errorhandler(404)
+def api_not_found(error):
+    return {"message": "API not found"}, 404

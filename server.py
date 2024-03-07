@@ -69,7 +69,9 @@ def get_data():
         except NameError:
                 return {"message":"Data not found"}, 404
 
-#Create a method called name_search with the @app.route decorator. This method should be called when a client requests for the /name_search URL. The method will not accept any parameter, however, will look for the argument q in the incoming request URL. This argument holds the first_name the client is looking for. The method returns:
+#Create a method called name_search with the @app.route decorator. This method should be called when a client requests for the /name_search URL. 
+#The method will not accept any parameter, however, will look for the argument q in the incoming request URL. This argument holds the first_name the client is looking for. 
+#The method returns:
 #Person information with a status of HTTP 400 if the first_name is found in the data
 #Message of Invalid input parameter with a status of HTTP 422 if the argument q is missing from the request
 #Message of Person not found with a status code of HTTP 404 if the person is not found in the data
@@ -93,7 +95,9 @@ def count():
     except NameError:
         return {"message": "data not defined"}, 500
 
-#Create a new endpoint for http://localhost/person/unique_identifier. The method should be named find_by_uuid. It should take an argument of type UUID and return the person JSON if found. If the person is not found, the method should return a 404 with a message of person not found. Finally, the client (curl) should only be able to call this method by passing a valid UUID type id.
+#Create a new endpoint for http://localhost/person/unique_identifier. The method should be named find_by_uuid. 
+#It should take an argument of type UUID and return the person JSON if found. If the person is not found, the method should return a 404 with a message of person not found. 
+#Finally, the client (curl) should only be able to call this method by passing a valid UUID type id.
                   
 @app.route("/person/<uuid:id>")      
 def find_by_uuid(id):      
@@ -102,7 +106,9 @@ def find_by_uuid(id):
             return person
     return {"message": "person not found"}, 404
 
-#Create a new endpoint for DELETE http://localhost/person/unique_identifier. The method should be named delete_by_uuid. It should take in an argument of type UUID and delete the person from the data list with that id. If the person is not found, the method should return a 404 with a message of person not found. Finally, the client (curl) should call this method by passing a valid UUID type id.
+#Create a new endpoint for DELETE http://localhost/person/unique_identifier. The method should be named delete_by_uuid.
+#It should take in an argument of type UUID and delete the person from the data list with that id. 
+#If the person is not found, the method should return a 404 with a message of person not found. Finally, the client (curl) should call this method by passing a valid UUID type id.
 
 @app.route("/person/<uuid:id>", methods=['DELETE'])
 def delete_by_uuid(id):                                              
@@ -111,3 +117,20 @@ def delete_by_uuid(id):
             data.remove(person)          
             return {"message":f"{id}"}, 200                  
     return {"message": "person not found"}, 404   
+
+#Create a method called add_by_uuid with the @app.route decorator. This method should be called when a client requests with the POST method for the /person URL.
+#The method will not accept any parameter but will grab the person details from the JSON body of the POST request. 
+#The method returns:
+#person id if the person was successfully added to data; HTTP 200 code
+#message of Invalid input parameter with a status of HTTP 422 if the json body is missing
+
+@app.route("/person", methods=['POST'])
+        def add_by_uuid():
+                new_person = request.json
+                if not new_person:
+                        return {"message":"Invalid input parameter"},422
+                try:
+                        data.append(new_person)
+                except NameError:
+                        return {"message":"data not defined"}, 500
+                return {"message": f"{new_person['id']}"},200
